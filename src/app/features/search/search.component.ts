@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import {Component, signal, computed, inject} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { GiphyService } from '../../core/services/giphy.service';
@@ -18,7 +18,7 @@ export class SearchComponent {
   error = signal<string | null>(null);
   hasSearched = signal(false);
 
-  constructor(private giphy: GiphyService) {}
+  giphyService = inject(GiphyService);
 
   onSearch(): void {
     const q = this.query().trim();
@@ -26,7 +26,7 @@ export class SearchComponent {
     this.hasSearched.set(true);
     this.loading.set(true);
     this.error.set(null);
-    this.giphy.search(q).subscribe({
+    this.giphyService.search(q).subscribe({
       next: (list) => {
         this.gifs.set(list);
         this.loading.set(false);

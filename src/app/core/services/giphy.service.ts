@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { GIPHY_API_KEY } from '../env.generated';
@@ -8,7 +8,7 @@ const GIPHY_API = 'https://api.giphy.com/v1/gifs';
 
 @Injectable({ providedIn: 'root' })
 export class GiphyService {
-  constructor(private http: HttpClient) {}
+  http = inject(HttpClient);
 
   search(query: string, limit = 25, offset = 0): Observable<Gif[]> {
     const params = new HttpParams()

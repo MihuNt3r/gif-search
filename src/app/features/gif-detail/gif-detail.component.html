@@ -9,13 +9,13 @@
     <p class="error">{{ error() }}</p>
   }
 
-  @if (gif(); as g) {
+  @if (gif(); as gif) {
     <article class="gif-detail">
-      <h1 class="gif-title">{{ g.title || 'Без назви' }}</h1>
+      <h1 class="gif-title">{{ gif.title || 'Без назви' }}</h1>
       <div class="gif-media">
         <img
-          [src]="g.images?.original?.url"
-          [alt]="g.title || 'GIF'"
+          [src]="gif.images?.original?.url"
+          [alt]="gif.title || 'GIF'"
           class="gif-img"
         />
       </div>
@@ -24,9 +24,9 @@
         <dd>{{ author }}</dd>
         <dt>Дата створення</dt>
         <dd>{{ displayDate }}</dd>
-        @if (g.source) {
+        @if (gif.source) {
           <dt>Джерело</dt>
-          <dd><a [href]="g.source" target="_blank" rel="noopener">{{ g.source }}</a></dd>
+          <dd><a [href]="gif.source" target="_blank" rel="noopener">{{ gif.source }}</a></dd>
         }
       </dl>
       <div class="actions">
