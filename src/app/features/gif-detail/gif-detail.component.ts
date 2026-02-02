@@ -1,5 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { GiphyService } from '../../core/services/giphy.service';
 import type { Gif } from '../../core/models/gif.model';
 
@@ -13,6 +14,7 @@ import type { Gif } from '../../core/models/gif.model';
 export class GifDetailComponent {
   private route = inject(ActivatedRoute);
   private giphy = inject(GiphyService);
+  private http = inject(HttpClient);
 
   gif = signal<Gif | null>(null);
   loading = signal(true);
@@ -83,15 +85,25 @@ export class GifDetailComponent {
     const g = this.gif();
     const url = this.originalUrl;
     if (!url || !g) return;
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = (g.title || g.id || 'gif').replace(/[^\w\s-]/g, '') + '.gif';
-    a.target = '_blank';
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    this.downloadLabel.set('Завантажено');
-    setTimeout(() => this.downloadLabel.set('Завантажити'), 2000);
+    const filename = (g.title || g.id || 'gif').replace(/[^\w\s-]/g, '').trim() || 'gif' + '.gif';
+    this.downloadLabel.set('Завантаження...');
+    this.http.get(url, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+        this.downloadLabel.set('Завантажено');
+        setTimeout(() => this.downloadLabel.set('Завантажити'), 2000);
+      },
+      error: () => {
+        this.downloadLabel.set('Помилка завантаження');
+        setTimeout(() => this.downloadLabel.set('Завантажити'), 2000);
+      }
+    });
   }
 }
