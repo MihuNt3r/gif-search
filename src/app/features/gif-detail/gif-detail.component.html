@@ -1,0 +1,42 @@
+<div class="detail-page">
+  <a routerLink="/" class="back-link">← Назад до пошуку</a>
+
+  @if (loading()) {
+    <p class="loading">Завантаження...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (gif(); as g) {
+    <article class="gif-detail">
+      <h1 class="gif-title">{{ g.title || 'Без назви' }}</h1>
+      <div class="gif-media">
+        <img
+          [src]="g.images?.original?.url"
+          [alt]="g.title || 'GIF'"
+          class="gif-img"
+        />
+      </div>
+      <dl class="gif-meta">
+        <dt>Автор</dt>
+        <dd>{{ author }}</dd>
+        <dt>Дата створення</dt>
+        <dd>{{ displayDate }}</dd>
+        @if (g.source) {
+          <dt>Джерело</dt>
+          <dd><a [href]="g.source" target="_blank" rel="noopener">{{ g.source }}</a></dd>
+        }
+      </dl>
+      <div class="actions">
+        <button type="button" (click)="copyLink()" class="btn btn-secondary">
+          {{ copyLabel() }}
+        </button>
+        <button type="button" (click)="download()" class="btn btn-primary">
+          {{ downloadLabel() }}
+        </button>
+      </div>
+    </article>
+  }
+</div>

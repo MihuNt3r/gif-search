@@ -1,0 +1,42 @@
+<div class="search-page">
+  <header class="search-header">
+    <h1>Пошук GIF</h1>
+    <div class="search-form">
+      <input
+        type="text"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
+        (keydown.enter)="onSearch()"
+        placeholder="Введіть ключове слово..."
+        class="search-input"
+      />
+      <button type="button" (click)="onSearch()" [disabled]="loading()" class="search-btn">
+        {{ loading() ? 'Пошук...' : 'Шукати' }}
+      </button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (hasSearched() && !loading() && gifs().length === 0 && !error()) {
+    <p class="empty">Нічого не знайдено. Спробуйте інший запит.</p>
+  }
+
+  <div class="gif-grid">
+    @for (gif of gifs(); track gif.id) {
+      <a [routerLink]="['/gif', gif.id]" class="gif-card">
+        <img
+          [src]="gif.images?.fixed_height?.url ?? gif.images?.downsized_medium?.url ?? gif.images?.original?.url"
+          [alt]="gif.title || 'GIF'"
+          loading="lazy"
+          class="gif-img"
+        />
+        @if (gif.title) {
+          <span class="gif-title">{{ gif.title }}</span>
+        }
+      </a>
+    }
+  </div>
+</div>
