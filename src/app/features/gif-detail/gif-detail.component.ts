@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { GiphyService } from '../../core/services/giphy.service';
 import type { Gif } from '../../core/models/gif.model';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'app-gif-detail',
@@ -29,7 +30,7 @@ export class GifDetailComponent {
       this.$error.set('Невідомий GIF');
       return;
     }
-    this.giphy.getById(id).subscribe({
+    this.giphy.getById(id).pipe(take(1)).subscribe({
       next: (g) => {
         this.$gif.set(g);
         this.$loading.set(false);
@@ -87,7 +88,7 @@ export class GifDetailComponent {
     if (!url || !g) return;
     const filename = (g.title || g.id || 'gif').replace(/[^\w\s-]/g, '').trim() || 'gif' + '.gif';
     this.$downloadLabel.set('Завантаження...');
-    this.http.get(url, { responseType: 'blob' }).subscribe({
+    this.http.get(url, { responseType: 'blob' }).pipe(take(1)).subscribe({
       next: (blob) => {
         const objectUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');

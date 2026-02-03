@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { GiphyService } from '../../core/services/giphy.service';
 import type { Gif } from '../../core/models/gif.model';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -12,29 +13,29 @@ import type { Gif } from '../../core/models/gif.model';
   styleUrl: './search.component.scss'
 })
 export class SearchComponent {
-  query = signal('');
-  gifs = signal<Gif[]>([]);
-  loading = signal(false);
-  error = signal<string | null>(null);
-  hasSearched = signal(false);
+  $query = signal('');
+  $gifs = signal<Gif[]>([]);
+  $loading = signal(false);
+  $error = signal<string | null>(null);
+  $hasSearched = signal(false);
 
   giphyService = inject(GiphyService);
 
   onSearch(): void {
-    const q = this.query().trim();
+    const q = this.$query().trim();
     if (!q) return;
-    this.hasSearched.set(true);
-    this.loading.set(true);
-    this.error.set(null);
-    this.giphyService.search(q).subscribe({
+    this.$hasSearched.set(true);
+    this.$loading.set(true);
+    this.$error.set(null);
+    this.giphyService.search(q).pipe(take(1)).subscribe({
       next: (list) => {
-        this.gifs.set(list);
-        this.loading.set(false);
+        this.$gifs.set(list);
+        this.$loading.set(false);
       },
       error: (err) => {
-        this.error.set(err?.message ?? 'Search failed');
-        this.gifs.set([]);
-        this.loading.set(false);
+        this.$error.set(err?.message ?? 'Search failed');
+        this.$gifs.set([]);
+        this.$loading.set(false);
       }
     });
   }
