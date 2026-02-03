@@ -93,9 +93,7 @@ export class GifDetailComponent {
         const a = document.createElement('a');
         a.href = objectUrl;
         a.download = filename;
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
         URL.revokeObjectURL(objectUrl);
         this.$downloadLabel.set('Завантажено');
         setTimeout(() => this.$downloadLabel.set('Завантажити'), 2000);
