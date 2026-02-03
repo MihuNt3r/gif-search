@@ -1,15 +1,15 @@
 <div class="detail-page">
   <a routerLink="/" class="back-link">← Назад до пошуку</a>
 
-  @if (loading()) {
+  @if ($loading()) {
     <p class="loading">Завантаження...</p>
   }
 
-  @if (error()) {
-    <p class="error">{{ error() }}</p>
+  @if ($error()) {
+    <p class="error">{{ $error() }}</p>
   }
 
-  @if (gif(); as gif) {
+  @if ($gif(); as gif) {
     <article class="gif-detail">
       <h1 class="gif-title">{{ gif.title || 'Без назви' }}</h1>
       <div class="gif-media">
@@ -31,10 +31,10 @@
       </dl>
       <div class="actions">
         <button type="button" (click)="copyLink()" class="btn btn-secondary">
-          {{ copyLabel() }}
+          {{ $copyLabel() }}
         </button>
         <button type="button" (click)="download()" class="btn btn-primary">
-          {{ downloadLabel() }}
+          {{ $downloadLabel() }}
         </button>
       </div>
     </article>
